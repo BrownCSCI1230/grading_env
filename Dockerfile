@@ -1,9 +1,8 @@
-FROM ubuntu:20.04
+FROM gradescope/autograder-base:ubuntu-20.04
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   apt-transport-https \
   curl \
-  firefox \
   git \
   libgl1-mesa-dri \
   menu \
@@ -41,7 +40,7 @@ RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-ke
 
 COPY etc/skel/.xinitrc /etc/skel/.xinitrc
 
-# Cypress dependencies
+#Cypress dependencies
 RUN sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
 
 RUN useradd -m -s /bin/bash user
@@ -81,7 +80,10 @@ ENV ENV DEBIAN_FRONTEND=noninteractive \
     QT_PATH=${QT_PATH} \
     PATH=${QT_PATH}/Tools/CMake/bin:${QT_PATH}/Tools/Ninja:${QT_PATH}/${QT_VERSION}/gcc_64/bin:$PATH
 
-RUN apt-get -y install build-essential libgl1-mesa-dev
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
+build-essential libgl1-mesa-dev \
+libglib2.0-0 libglu1-mesa-dev libglu1-mesa libxi-dev libxkbcommon-dev \
+libxkbcommon-x11-dev libxkbfile-dev dbus
 
 COPY get_qt.sh /tmp/
 RUN chmod +x /tmp/*
@@ -91,15 +93,3 @@ RUN /tmp/get_qt.sh
 COPY run_autograder /autograder/
 RUN dos2unix /autograder/run_autograder
 RUN chmod +x /autograder/run_autograder
-
-# Build-time metadata as defined at http://label-schema.org
-ARG BUILD_DATE
-ARG IMAGE
-ARG VCS_REF
-ARG VCS_URL
-LABEL org.label-schema.build-date=$BUILD_DATE \
-      org.label-schema.name=$IMAGE \
-      org.label-schema.description="An image based on ubuntu:20.04 containing an X_Window_System which supports rendering graphical applications, including OpenGL apps" \
-      org.label-schema.vcs-ref=$VCS_REF \
-      org.label-schema.vcs-url=$VCS_URL \
-      org.label-schema.schema-version="1.0"
