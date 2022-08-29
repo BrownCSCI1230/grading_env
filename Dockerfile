@@ -85,11 +85,15 @@ build-essential libgl1-mesa-dev \
 libglib2.0-0 libglu1-mesa-dev libglu1-mesa libxi-dev libxkbcommon-dev \
 libxkbcommon-x11-dev libxkbfile-dev dbus
 
-COPY get_qt.sh /tmp/
+COPY image_scripts/get_qt.sh /tmp/
 RUN chmod +x /tmp/*
 RUN /tmp/get_qt.sh
 
 # Setup autograder
-COPY run_autograder /autograder/
+COPY image_scripts/run_autograder /autograder/
 RUN dos2unix /autograder/run_autograder
 RUN chmod +x /autograder/run_autograder
+
+# Setup build script 
+COPY image_scripts/build_project.sh /opt/
+RUN chmod +x /opt/build_project.sh

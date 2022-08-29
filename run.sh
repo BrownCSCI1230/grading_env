@@ -1,10 +1,11 @@
 #!/bin/bash
 
 container=opengl
-image=thewtex/opengl
+image=anc2001/cs1230_env:latest
 port=6080
 extra_run_args=""
 quiet=""
+executable=""
 
 show_help() {
 cat << EOF
@@ -30,6 +31,7 @@ Options:
                  string, the port is not exposed.
   -r             Extra arguments to pass to 'docker run'. E.g.
                  --env="APP=glxgears"
+  -e			 Executable name
   -q             Do not output informational messages.
 EOF
 }
@@ -56,6 +58,10 @@ while [ $# -gt 0 ]; do
 			extra_run_args="$extra_run_args $2"
 			shift
 			;;
+		-e)
+		   executable=$2
+		   shift
+		   ;;
 		-q)
 			quiet=1
 			;;
@@ -125,8 +131,10 @@ if [ -n "$port" ]; then
 fi
 
 docker run \
+  --platform=linux/amd64 \
   -d \
   --name $container \
+  --env="APP=/tmp/build/${executable}" \
   ${mount_local} \
   $port_arg \
   $extra_run_args \
