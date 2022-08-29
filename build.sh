@@ -1,24 +1,59 @@
 #!/bin/bash
 
-src_dir="/Users/adrianchang/CS/CS1230_dev/projects_2D"
-executable="2dprojects"
-image_name="test"
-container="temp"
+src_dir=""
+image_name=cs1230_qt_project
+container=silly_container
 
-echo ${src_dir}
-echo ${image_name}
+show_help() {
+cat << EOF
+Usage: ${0##*/} [-h] [-s SRC] [-c CONTAINER] [-i IMAGE]
+
+This script is a convenience script to build Qt based projects in a docker environment.
+It will
+
+- Based on 
+
+Options:
+
+  -h             Display this help and exit.
+  -s             Path to source code locally (required)
+  -c             Container name to use and delete immediately (default ${container}).
+  -i             Image name to write to (default ${image_name}).
+EOF
+}
+
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-h)
+			show_help
+			exit 0
+			;;
+        -s) 
+            src_dir=$2
+            ;;
+		-c)
+			container=$2
+			shift
+			;;
+		-i)
+			image=$2
+			shift
+			;;
+	esac
+	shift
+done
 
 # Run container and
 docker run \
-    --name ${container} \
+    --name "${container}" \
     --platform=linux/amd64 \
     -v "${src_dir}:/tmp/src" \
     anc2001/cs1230_env:latest \
     /opt/build_project.sh
 
 # Remove 
-docker commit ${container} ${image_name}
+docker commit "${container}" "${image_name}"
 # Remove the temporary container 
-docker container rm ${container}
+docker container rm "${container}"
 
 

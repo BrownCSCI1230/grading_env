@@ -1,7 +1,7 @@
 #!/bin/bash
 
-container=opengl
-image=anc2001/cs1230_env:latest
+container=qt_app
+image=cs1230_qt_project
 port=6080
 extra_run_args=""
 quiet=""

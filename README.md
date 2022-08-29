@@ -9,18 +9,42 @@ To build the image run `docker buildx build --platform=linux/amd64 -t username/i
 Otherwise the Docker is image available with `docker pull anc2001/cs1230_env:latest`
 
 ## Usage Scripts
+To build and run a student's project first build a docker image containing the compiled executable with `build.sh` and then run that image in a container with a graphical output with `run.sh` 
 
-## Gradescope 
-The specifications for creating a custom Docker image for Gradescope can be found [here](https://gradescope-autograders.readthedocs.io/en/latest/manual_docker/). 
+**Example**
 
-The Docker image is based on `gradescope/autograder-base:ubuntu-20.04`. It requires that the script `run_autograder` (written in any valid language available with `!#`) be installed at `/autograder`. The `run_autograder` for this image attempts to compile the project with `cmake` and returing whether the compilation was successful. This script can of course be overwritten for more complex test suites. 
+Build project: this will take the source code, build it, and write that image to a docker image called `cs1230_qt_project` (default)
 
-See the Gradescope docs for running the autograder locally. 
+```
+./build.sh -s /path/to/src
+```
 
-## Graphical Output
-The image displays graphical output using the methods found in the Dockerfile [here](https://github.com/thewtex/docker-opengl/tree/webgl). The image looks for the executable specified by the `APP` environment variable and displays that to the local host. More in depth information on the specifics can be found [here](https://github.com/thewtex/docker-opengl/blob/master/README.rst)
+Run project: this will run the previously build docker image (`cs1230_qt_project`) in a docker container and connect it to a graphical display accessible within any modern browser at `http://localhost:6080` by default. The executable name is the name specified in the projects `CMakeLists.txt` by `add_executable`
+```
+./run.sh -e executable_name
+```
 
-Usage for `run.sh` is 
+Below is a more verbose documentation of each script's usage
+
+Usage for `build.sh`
+
+```
+  Usage: build.sh [-h] [-s SRC] [-c CONTAINER] [-i IMAGE]
+
+  This script is a convenience script to build Qt based projects in a docker environment.
+  It will
+
+  - Based on 
+
+  Options:
+
+    -h             Display this help and exit.
+    -s             Path to source code locally (required)
+    -c             Container name to use and delete immediately (default silly_container).
+    -i             Image name to write to (default cs1230_qt_project).
+```
+
+Usage for `run.sh` 
 
 ```
   Usage: run.sh [-h] [-q] [-c CONTAINER] [-i IMAGE] [-p PORT] [-r DOCKER_RUN_FLAGS]
@@ -39,14 +63,27 @@ Usage for `run.sh` is
   Options:
 
     -h             Display this help and exit.
-    -c             Container name to use (default opengl).
-    -i             Image name (default thewtex/opengl).
+    -c             Container name to use (default qt_app).
+    -i             Image name (default cs1230_qt_project).
     -p             Port to expose HTTP server (default 6080). If an empty
-                   string, the port is not exposed.
+                  string, the port is not exposed.
     -r             Extra arguments to pass to 'docker run'. E.g.
-                   --env="APP=glxgears"
+                  --env="APP=glxgears"
+    -e			       Executable name
     -q             Do not output informational messages.
 ```
+
+When you're done with the docker container you can either stop the shell script with `SIGQUIT` or run `docker stop qt_app`
+
+## Gradescope 
+The specifications for creating a custom Docker image for Gradescope can be found [here](https://gradescope-autograders.readthedocs.io/en/latest/manual_docker/). 
+
+The Docker image is based on `gradescope/autograder-base:ubuntu-20.04`. It requires that the script `run_autograder` (written in any valid language available with `!#`) be installed at `/autograder`. The `run_autograder` for this image attempts to compile the project with `cmake` and returing whether the compilation was successful. This script can of course be overwritten for more complex test suites. 
+
+See the Gradescope docs for running the autograder locally. 
+
+## Graphical Output
+The image displays graphical output using the methods found in the Dockerfile [here](https://github.com/thewtex/docker-opengl/tree/webgl). The image looks for the executable specified by the `APP` environment variable and displays that to the local host. More in depth information on the specifics can be found [here](https://github.com/thewtex/docker-opengl/blob/master/README.rst)
 
 There are a lot of unncessary things that come from this repo that can be cleaned up (i.e. Mozilla, Google Chrome, Nodejs)
 
