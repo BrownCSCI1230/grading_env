@@ -24,6 +24,8 @@ Run project: this will run the previously build docker image (`cs1230_qt_project
 ./run.sh -e executable_name
 ```
 
+When you're done with the docker container you can either stop the shell script with `SIGQUIT` or run `docker stop qt_app`
+
 Below is a more verbose documentation of each script's usage
 
 Usage for `build.sh`
@@ -72,8 +74,6 @@ Usage for `run.sh`
     -e			       Executable name
     -q             Do not output informational messages.
 ```
-
-When you're done with the docker container you can either stop the shell script with `SIGQUIT` or run `docker stop qt_app`
 
 ## Gradescope 
 The specifications for creating a custom Docker image for Gradescope can be found [here](https://gradescope-autograders.readthedocs.io/en/latest/manual_docker/). 
