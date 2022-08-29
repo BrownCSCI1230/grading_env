@@ -4,9 +4,10 @@ Unified grading environment that has
  * Ability to show graphical output (including OpenGL) 
  * Contains the Qt library and the tools to compile Qt projects 
 
-To build the image run `docker buildx build --platform=linux/amd64 -t username/image_name:tag .`
+## Setup 
+Get docker [here](https://docs.docker.com/get-docker/)
 
-Otherwise the Docker is image available with `docker pull anc2001/cs1230_env:latest`
+Pull the unified class grading environment with `docker pull anc2001/cs1230_env:latest`
 
 ## Usage Scripts
 To build and run a student's project first build a docker image containing the compiled executable with `build.sh` and then run that image in a container with a graphical output with `run.sh` 
@@ -75,7 +76,10 @@ Usage for `run.sh`
     -q             Do not output informational messages.
 ```
 
-## Gradescope 
+# Image details
+Build the image with `docker buildx build --platform=linux/amd64 -t username/image_name:tag .`
+
+## Gradescope
 The specifications for creating a custom Docker image for Gradescope can be found [here](https://gradescope-autograders.readthedocs.io/en/latest/manual_docker/). 
 
 The Docker image is based on `gradescope/autograder-base:ubuntu-20.04`. It requires that the script `run_autograder` (written in any valid language available with `!#`) be installed at `/autograder`. The `run_autograder` for this image attempts to compile the project with `cmake` and returing whether the compilation was successful. This script can of course be overwritten for more complex test suites. 
