@@ -1,6 +1,7 @@
 #!/bin/bash
 
 src_dir=""
+executable=""
 image_name=cs1230_qt_project
 container=silly_container
 
@@ -18,6 +19,7 @@ Options:
   -h             Display this help and exit.
   -s             Path to source code locally (required)
   -c             Container name to use and delete immediately (default ${container}).
+  -e			 Executable name
   -i             Image name to write to (default ${image_name}).
 EOF
 }
@@ -30,11 +32,16 @@ while [ $# -gt 0 ]; do
 			;;
         -s) 
             src_dir=$2
+            shift
             ;;
 		-c)
 			container=$2
 			shift
 			;;
+		-e)
+		   executable=$2
+		   shift
+		   ;;
 		-i)
 			image=$2
 			shift
@@ -43,13 +50,16 @@ while [ $# -gt 0 ]; do
 	shift
 done
 
-# Run container and
+# Delete 
+docker image rm "${image_name}"
+
+# Run container and build project
 docker run \
     --name "${container}" \
     --platform=linux/amd64 \
     -v "${src_dir}:/tmp/src" \
     anc2001/cs1230_env:latest \
-    /opt/build_project.sh
+    /opt/build_project.sh "${executable}"
 
 # Remove 
 docker commit "${container}" "${image_name}"

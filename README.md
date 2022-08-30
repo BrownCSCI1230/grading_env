@@ -77,7 +77,7 @@ Usage for `run.sh`
 ```
 
 # Image details
-Build the image with `docker buildx build --platform=linux/amd64 -t username/image_name:tag .`
+Build the image with `docker build --platform=linux/amd64 -t username/image_name:tag .`
 
 ## Gradescope
 The specifications for creating a custom Docker image for Gradescope can be found [here](https://gradescope-autograders.readthedocs.io/en/latest/manual_docker/). 

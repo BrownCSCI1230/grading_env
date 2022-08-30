@@ -42,6 +42,10 @@ while [ $# -gt 0 ]; do
 			show_help
 			exit 0
 			;;
+        -s) 
+            src_dir=$2
+			shift
+            ;;
 		-c)
 			container=$2
 			shift
@@ -123,7 +127,7 @@ fi
 pwd_dir="$(pwd)"
 mount_local=""
 if [ "${os}" = "Linux" ] || [ "${os}" = "Darwin" ]; then
-	mount_local=" -v ${pwd_dir}:/home/user/work "
+	mount_local=" -v ${pwd_dir}:/home/user/working"
 fi
 port_arg=""
 if [ -n "$port" ]; then

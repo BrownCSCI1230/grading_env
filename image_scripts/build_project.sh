@@ -9,3 +9,6 @@ PATH=${QT_PATH}/Tools/CMake/bin:${QT_PATH}/Tools/Ninja:${QT_PATH}/${QT_VERSION}/
 
 cmake -DCMAKE_PREFIX_PATH=${QT_PATH}/${QT_VERSION}/gcc_64 -S /tmp/src -B /tmp/build
 cmake --build /tmp/build
+
+cp -a /tmp/src /home/user/work
+ls /home/user/work
