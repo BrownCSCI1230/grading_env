@@ -97,24 +97,24 @@ Usage for `run.sh`
     -q             Do not output informational messages.
 ```
 
-# Image details
+## Image details
 Build the image with `docker build --platform=linux/amd64 -t username/image_name:tag .`
 
 Please also note that for all executables at runtime the working directory is `/home/user/work`. Put any necessary files in this directory. 
 
-## Gradescope
+### Gradescope
 The specifications for creating a custom Docker image for Gradescope can be found [here](https://gradescope-autograders.readthedocs.io/en/latest/manual_docker/). 
 
 The Docker image is based on `gradescope/autograder-base:ubuntu-20.04`. It requires that the script `run_autograder` (written in any valid language available with `!#`) be installed at `/autograder`. The `run_autograder` for this image attempts to compile the project with `cmake` and returing whether the compilation was successful. This script can of course be overwritten for more complex test suites. 
 
 See the Gradescope docs for running the autograder locally. 
 
-## Graphical Output
+### Graphical Output
 The image displays graphical output using the methods found in the Dockerfile [here](https://github.com/thewtex/docker-opengl/tree/webgl). The image looks for the executable specified by the `APP` environment variable and displays that to the local host. More in depth information on the specifics can be found [here](https://github.com/thewtex/docker-opengl/blob/master/README.rst)
 
 There are a lot of unncessary things that come from this repo that can be cleaned up (i.e. Mozilla, Google Chrome, Nodejs)
 
-## Qt Headless Installation
+### Qt Headless Installation
 The `get_qt.sh` script comes from [here](https://github.com/state-of-the-art/qt6-docker)
 
 The script relies on [aqt](https://github.com/miurahr/aqtinstall) which is a codebase for installing Qt headlessly. Unfortunately it is unofficial and not associated with the Qt company. 
