@@ -12,7 +12,7 @@ Pull the unified class grading environment with `docker pull anc2001/cs1230_env:
 ## Usage Scripts
 To build and run a student's project first build a docker image containing the compiled executable with `build.sh` and then run that image in a container with a graphical output with `run.sh` 
 
-**Example**
+**Example - Graphical App**
 
 Build project: this will take the source code, build it, and write that image to a docker image called `cs1230_qt_project` (default)
 
@@ -26,6 +26,27 @@ Run project: this will run the previously build docker image (`cs1230_qt_project
 ```
 
 When you're done with the docker container you can either stop the shell script with `SIGQUIT` or run `docker stop qt_app`
+
+**Example - Command Line App**
+
+Instead of linking this application to a graphical display, the following example will build a CLI executable (Ray in this case), mounts a local volume containing the output image results, and opens an interactive sesion in docker container. 
+
+Like before, build with the `build.sh` script. This will build the image to a local image called `ray:latest`
+```
+./build.sh -s /path/to/src -i ray
+```
+
+Instead of using the `run.sh` script which by default sets up a graphical display, run a docker container from the previously built image with `docker run`
+```
+docker run --rm -it --platform=linux/amd64 -v "/path/to/results:/tmp/results" ray /bin/bash
+```
+
+By default the Ray executable is built to `/tmp/build` so you can render images with 
+```
+/tmp/build/Ray test.ini
+```
+
+## Usage Script Documentation
 
 Below is a more verbose documentation of each script's usage
 
@@ -78,6 +99,8 @@ Usage for `run.sh`
 
 # Image details
 Build the image with `docker build --platform=linux/amd64 -t username/image_name:tag .`
+
+Please also note that for all executables at runtime the working directory is `/home/user/work`. Put any necessary files in this directory. 
 
 ## Gradescope
 The specifications for creating a custom Docker image for Gradescope can be found [here](https://gradescope-autograders.readthedocs.io/en/latest/manual_docker/). 

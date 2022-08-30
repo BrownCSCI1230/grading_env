@@ -19,7 +19,6 @@ Options:
   -h             Display this help and exit.
   -s             Path to source code locally (required)
   -c             Container name to use and delete immediately (default ${container}).
-  -e			 Executable name
   -i             Image name to write to (default ${image_name}).
 EOF
 }
@@ -38,12 +37,8 @@ while [ $# -gt 0 ]; do
 			container=$2
 			shift
 			;;
-		-e)
-		   executable=$2
-		   shift
-		   ;;
 		-i)
-			image=$2
+			image_name=$2
 			shift
 			;;
 	esac
@@ -59,7 +54,7 @@ docker run \
     --platform=linux/amd64 \
     -v "${src_dir}:/tmp/src" \
     anc2001/cs1230_env:latest \
-    /opt/build_project.sh "${executable}"
+    /opt/build_project.sh
 
 # Remove 
 docker commit "${container}" "${image_name}"
