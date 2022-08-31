@@ -9,10 +9,7 @@ Get docker [here](https://docs.docker.com/get-docker/)
 
 Pull the unified class grading environment with `docker pull anc2001/cs1230_env:latest`
 
-## Usage Scripts
-To build and run a student's project first build a docker image containing the compiled executable with `build.sh` and then run that image in a container with a graphical output with `run.sh` 
-
-**Example - Graphical App**
+## Usage 
 
 First setup some environment variables for naming. You will need to specify the path to the source code `SRC_PATH` and the name of the executable `EXECUTABLE`. The others you can really name anything you want. 
 ```
@@ -40,7 +37,21 @@ docker container rm ${CONTAINER}
 <details>
   <summary>What do all of these commands mean?</summary>
 
+`--name` specifices the name of the container 
 
+`--platform` specifies the architecture the docker container will run on
+
+`-v "${SRC_PATH}:/tmp/src"` mounts a volume in the container. The files at `SRC_PATH` (the project source code) will be accessible at `/tmp/src` within the container 
+
+`anc2001/cs1230_env:latest` is the name of the Docker Image the container is based on
+
+`/opt/build_project.sh` is the script the docker container will run upon starting 
+
+`docker image rm ${IMAGE}` - deletes the previous image at `IMAGE`
+
+`docker commit ${CONTAINER} ${IMAGE}` - saves the container as permanent memory at `IMAGE`, otherwise the compiled executable will disappear after the container is removed 
+
+`docker container rm ${CONTAINER}` - Remove the container 
 </details>
 
 Run project: this will run the previously build docker image (`cs1230_qt_project`) in a docker container and connect it to a graphical display accessible within any modern browser at `http://localhost:6080` by default. 
@@ -58,6 +69,13 @@ docker run \
 <details>
   <summary>What do all of these commands mean?</summary>
 
+`-d` means the container runs in detached mode (i.e. in the background)
+
+`--env` sets the environment variable `APP` inside the container. The container will by default look at 
+
+`-p` opens up a port at 6080 by default, you can change this if you really want 
+
+`/usr/bin/supervisord -c /etc/supervisor/supervisord.conf` is the command to open up a graphical session and expose it at the corresponding sport 
 </details>
 
 The application should now be available at `http://localhost:6080`
