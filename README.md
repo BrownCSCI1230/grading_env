@@ -10,7 +10,7 @@ Get docker [here](https://docs.docker.com/get-docker/)
 Pull the unified class grading environment with `docker pull anc2001/cs1230_env:latest`
 
 ## Usage 
-
+### Building 
 First setup some environment variables for naming. You will need to specify the path to the source code `SRC_PATH` and the name of the executable `EXECUTABLE`. The others you can really name anything you want. 
 ```
 export SRC_PATH=/path/to/src \
@@ -35,7 +35,7 @@ docker container rm ${CONTAINER}
 ```
 
 <details>
-  <summary>What do all of these commands mean?</summary>
+  <summary>What am I looking at?</summary>
 
 `--name` specifices the name of the container 
 
@@ -54,7 +54,9 @@ docker container rm ${CONTAINER}
 `docker container rm ${CONTAINER}` - Remove the container 
 </details>
 
-Run project: this will run the previously build docker image (`cs1230_qt_project`) in a docker container and connect it to a graphical display accessible within any modern browser at `http://localhost:6080` by default. 
+### Running 
+#### Graphical Output (2D projects and Realtime)
+This will run the previously build docker image (`cs1230_qt_project`) in a docker container and connect it to a graphical display accessible within any modern browser at `http://localhost:6080` by default. 
 ```
 docker run \
   --platform=linux/amd64 \
@@ -67,13 +69,13 @@ docker run \
 ```
 
 <details>
-  <summary>What do all of these commands mean?</summary>
+  <summary>What am I looking at?</summary>
 
 `-d` means the container runs in detached mode (i.e. in the background)
 
 `--env` sets the environment variable `APP` inside the container. The container will by default look at 
 
-`-p` opens up a port at 6080 by default, you can change this if you really want 
+`-p` opens up a port at 6080 by default, you can change this if you really want by changing the first argument number
 
 `/usr/bin/supervisord -c /etc/supervisor/supervisord.conf` is the command to open up a graphical session and expose it at the corresponding sport 
 </details>
@@ -81,6 +83,33 @@ docker run \
 The application should now be available at `http://localhost:6080`
 
 When you're done with the docker container you can run `docker stop ${CONTAINER}` and `docker container rm ${CONTAINER}`
+
+#### Command Line (Ray)
+This will open up the previously built image with an interactive terminal session that allows you to run the executable. Since the example is Ray, It will also mount a volume so that you can see the resulting images. 
+
+```
+export RESULTS_PATH=/path/to/results
+
+docker run \
+  --rm \
+  -it \
+  --platform=linux/amd64 \
+  -v "${RESULTS_PATH}:/tmp/results" \
+  ${IMAGE} \
+  /bin/bash
+```
+
+<details>
+  <summary>What am I looking at?</summary>
+
+`-it` specifies an interactive session 
+
+`--rm` will remove the container when exited 
+
+`/bin/bash` is the command to open up `bash` upon starting the container 
+</details>
+
+Ray specific: Make sure your ini files point to an output image at `/tmp/results` so that you can you see your images! 
 
 ## Image details
 Build the image with `docker build --platform=linux/amd64 -t username/image_name:tag .`
