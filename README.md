@@ -10,8 +10,10 @@ Get docker [here](https://docs.docker.com/get-docker/)
 Pull the unified class grading environment with `docker pull anc2001/cs1230_env:latest`
 
 ## Usage 
+**Note** If you are on Windows, you must run these commands in Git Bash. All filepaths must be specified with `//`. This includes the path to the source code `SRC_PATH` and the the other filepaths present in the command. Included are windows variations of each of these commands in a dropdown menu. 
+
 ### Building 
-First setup some environment variables for naming. You will need to specify the path to the source code `SRC_PATH` and the name of the executable `EXECUTABLE`. The others you can really name anything you want. 
+First setup some environment variables for naming. You will need to specify the path to the source code `SRC_PATH` (make sure they have `//` if you're on windows) and the name of the executable `EXECUTABLE`. The others you can really name anything you want. 
 ```
 export SRC_PATH=/path/to/src \
   EXECUTABLE=executable_name
@@ -33,6 +35,21 @@ docker image rm ${IMAGE}
 docker commit ${CONTAINER} ${IMAGE}
 docker container rm ${CONTAINER}
 ```
+
+<details>
+  <summary>Windows Git Bash Version</summary>
+docker run \
+    --name ${CONTAINER} \
+    --platform=linux/amd64 \
+    -v "${SRC_PATH}://tmp//src" \
+    anc2001/cs1230_env:latest \
+    //opt//build_project.sh
+
+docker image rm ${IMAGE}
+docker commit ${CONTAINER} ${IMAGE}
+docker container rm ${CONTAINER}
+
+</details>
 
 <details>
   <summary>What am I looking at?</summary>
@@ -69,6 +86,19 @@ docker run \
 ```
 
 <details>
+  <summary>Windows Git Bash Version</summary>
+docker run \
+  --platform=linux/amd64 \
+  -d \
+  --name ${CONTAINER} \
+  --env="APP=//tmp//build//${EXECUTABLE}" \
+  -p 6080:6080 \
+  ${IMAGE} \
+  //usr//bin//supervisord -c //etc//supervisor//supervisord.conf
+
+</details>
+
+<details>
   <summary>What am I looking at?</summary>
 
 `-d` means the container runs in detached mode (i.e. in the background)
@@ -98,6 +128,20 @@ docker run \
   ${IMAGE} \
   /bin/bash
 ```
+
+<details>
+  <summary>Windows Git Bash Version</summary>
+export RESULTS_PATH=//path//to//results
+
+docker run \
+  --rm \
+  -it \
+  --platform=linux/amd64 \
+  -v "${RESULTS_PATH}://tmp//results" \
+  ${IMAGE} \
+  //bin//bash
+  
+</details>
 
 <details>
   <summary>What am I looking at?</summary>
