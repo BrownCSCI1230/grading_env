@@ -38,7 +38,6 @@ docker container rm ${CONTAINER}
 
 <details>
   <summary>Windows Git Bash Version</summary>
-```
 docker run \
     --name ${CONTAINER} \
     --platform=linux/amd64 \
@@ -49,7 +48,6 @@ docker run \
 docker image rm ${IMAGE}
 docker commit ${CONTAINER} ${IMAGE}
 docker container rm ${CONTAINER}
-```
 
 </details>
 
