@@ -14,88 +14,55 @@ To build and run a student's project first build a docker image containing the c
 
 **Example - Graphical App**
 
-Build project: this will take the source code, build it, and write that image to a docker image called `cs1230_qt_project` (default)
-
+First setup some environment variables for naming. You will need to specify the path to the source code `SRC_PATH` and the name of the executable `EXECUTABLE`. The others you can really name anything you want. 
 ```
-./build.sh -s /path/to/src
-```
-
-Run project: this will run the previously build docker image (`cs1230_qt_project`) in a docker container and connect it to a graphical display accessible within any modern browser at `http://localhost:6080` by default. The executable name is the name specified in the projects `CMakeLists.txt` by `add_executable`
-```
-./run.sh -e executable_name
+export SRC_PATH=/path/to/src \
+  EXECUTABLE=executable_name
+  CONTAINER=qt_app \
+  IMAGE=cs1230_qt_project 
 ```
 
-When you're done with the docker container you can either stop the shell script with `SIGQUIT` or run `docker stop qt_app`
-
-**Example - Command Line App**
-
-Instead of linking this application to a graphical display, the following example will build a CLI executable (Ray in this case), mounts a local volume containing the output image results, and opens an interactive sesion in docker container. 
-
-Like before, build with the `build.sh` script. This will build the image to a local image called `ray:latest`
-```
-./build.sh -s /path/to/src -i ray
-```
-
-Instead of using the `run.sh` script which by default sets up a graphical display, run a docker container from the previously built image with `docker run`
-```
-docker run --rm -it --platform=linux/amd64 -v "/path/to/results:/tmp/results" ray /bin/bash
-```
-
-By default the Ray executable is built to `/tmp/build` so you can render images with 
-```
-/tmp/build/Ray test.ini
-```
-
-## Usage Script Documentation
-
-Below is a more verbose documentation of each script's usage
-
-Usage for `build.sh`
+Build project: this will take the source code, build it, and write that image to a docker image called `IMAGE`. The executable name is the name specified in the projects `CMakeLists.txt` by `add_executable`
 
 ```
-  Usage: build.sh [-h] [-s SRC] [-c CONTAINER] [-i IMAGE]
+docker run \
+    --name ${CONTAINER} \
+    --platform=linux/amd64 \
+    -v "${SRC_PATH}:/tmp/src" \
+    anc2001/cs1230_env:latest \
+    /opt/build_project.sh
 
-  This script is a convenience script to build Qt based projects in a docker environment.
-  It will
-
-  - Based on 
-
-  Options:
-
-    -h             Display this help and exit.
-    -s             Path to source code locally (required)
-    -c             Container name to use and delete immediately (default silly_container).
-    -i             Image name to write to (default cs1230_qt_project).
+docker image rm ${IMAGE}
+docker commit ${CONTAINER} ${IMAGE}
+docker container rm ${CONTAINER}
 ```
 
-Usage for `run.sh` 
+<details>
+  <summary>What do all of these commands mean?</summary>
 
+
+</details>
+
+Run project: this will run the previously build docker image (`cs1230_qt_project`) in a docker container and connect it to a graphical display accessible within any modern browser at `http://localhost:6080` by default. 
 ```
-  Usage: run.sh [-h] [-q] [-c CONTAINER] [-i IMAGE] [-p PORT] [-r DOCKER_RUN_FLAGS]
-
-  This script is a convenience script to run Docker images based on
-  thewtex/opengl. It:
-
-  - Makes sure docker is available
-  - On Windows and Mac OSX, creates a docker machine if required
-  - Informs the user of the URL to access the container with a web browser
-  - Stops and removes containers from previous runs to avoid conflicts
-  - Mounts the present working directory to /home/user/work on Linux and Mac OSX
-  - Prints out the graphical app output log following execution
-  - Exits with the same return code as the graphical app
-
-  Options:
-
-    -h             Display this help and exit.
-    -c             Container name to use (default qt_app).
-    -i             Image name (default cs1230_qt_project).
-    -p             Port to expose HTTP server (default 6080). If an empty
-                  string, the port is not exposed.
-    -r             Extra arguments to pass to 'docker run'. E.g.
-                  --env="APP=glxgears"
-    -e			       Executable name
-    -q             Do not output informational messages.
+docker run \
+  --platform=linux/amd64 \
+  -d \
+  --name ${CONTAINER} \
+  --env="APP=/tmp/build/${EXECUTABLE}" \
+  -p 6080:6080 \
+  ${IMAGE} \
+  /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 ```
+
+<details>
+  <summary>What do all of these commands mean?</summary>
+
+</details>
+
+The application should now be available at `http://localhost:6080`
+
+When you're done with the docker container you can run `docker stop ${CONTAINER}` and `docker container rm ${CONTAINER}`
 
 ## Image details
 Build the image with `docker build --platform=linux/amd64 -t username/image_name:tag .`
