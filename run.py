@@ -42,6 +42,10 @@ def main(args):
         exec_cmd[1] = "-c"
         exec_cmd[2] = "//etc/supervisor//supervisord.conf"
         env_cmd = f"APP=//tmp//build//{executable}"
+
+    print("Cleaning: it's ok if Docker tries to stop and remove a container that doesn't exist!")
+    run_command(["docker", "stop", container])
+    run_command(["docker", "container", "rm", container])
     
     if args.mode == 'graphical':
         cmd = [
