@@ -9,6 +9,48 @@ Get docker [here](https://docs.docker.com/get-docker/)
 
 Pull the unified class grading environment with `docker pull anc2001/cs1230_env:latest`
 
+## Convenience Scripts
+I've added 2 convenience python scripts `build.py` and `run.py` that should abstract away all of the explicit docker commands below. 
+
+Example usage is
+```
+python3 build.py -s /path/to/src
+```
+
+and
+
+```
+python3 run.py -e executable_name
+```
+
+Usage of the two scripts
+```
+usage: build.py [-h] -s SOURCE [-c CONTAINER] [-i IMAGE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SOURCE, --source SOURCE
+                        absolute filepath to source code (required)
+  -c CONTAINER, --container CONTAINER
+                        name of temporary container (default qt_build)
+  -i IMAGE, --image IMAGE
+                        name of image (default qt_project)
+```
+
+```
+usage: run.py [-h] [--mode MODE] -e EXECUTABLE [-c CONTAINER] [-i IMAGE]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --mode MODE           either graphical or cli
+  -e EXECUTABLE, --executable EXECUTABLE
+                        name of executable (required)
+  -c CONTAINER, --container CONTAINER
+                        name of container (default qt_app)
+  -i IMAGE, --image IMAGE
+                        name of image (default qt_project)
+```
+
 ## Usage 
 **Note** If you are on Windows, you must run these commands in Git Bash. All filepaths must be specified with `//`. This includes the path to the source code `SRC_PATH` and the the other filepaths present in the command. Included are windows variations of each of these commands in a dropdown menu. 
 

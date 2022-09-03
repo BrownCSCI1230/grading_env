@@ -5,9 +5,12 @@ from sys import platform
 
 def parseArguments():
     parser = ArgumentParser()
-    parser.add_argument('--s', type=str, required=True, help="absolute filepath to source code")
-    parser.add_argument('--c', type=str, default="qt_build", help="name of container")
-    parser.add_argument('--i', type=str, default="qt_project", help="name of image")
+    parser.add_argument('-s', '--source', type=str, required=True, 
+        help="absolute filepath to source code (required)")
+    parser.add_argument('-c', '--container', type=str, default="qt_build", 
+        help="name of temporary container (default qt_build)")
+    parser.add_argument('-i', '--image', type=str, default="qt_project", 
+        help="name of image (default qt_project)")
     args = parser.parse_args()
     return args
 
@@ -23,29 +26,26 @@ def run_command(cmd):
     return rc
 
 def main(args):
-    volume = args.s
-    container = args.c
-    image = args.i
 
     exec_cmd = ""
     volume_cmd = ""
     if platform == "linux" or platform == "linux2" or platform == "darwin":
         # linux or OS X
         exec_cmd = "/opt/build_project.sh"
-        volume_cmd = f"{volume}:/tmp/src"
+        volume_cmd = f"{args.source}:/tmp/src"
     elif platform == "win32":
         # Windows...
         exec_cmd = "//opt//build_project.sh"
-        volume_cmd = f"{volume}://tmp//src"
+        volume_cmd = f"{args.source}://tmp//src"
 
     print("Cleaning: it's ok if the images/container are not found!")
-    run_command(["docker", "image", "rm", image])
-    run_command(["docker", "container", "rm", container])
+    run_command(["docker", "image", "rm", args.image])
+    run_command(["docker", "container", "rm", args.container])
 
-    print("Building project to image:", image)
+    print("Building project to image:", args.image)
     cmd = ["docker", 
         "run", 
-        "--name", container, 
+        "--name", args.container, 
         "--platform=linux/amd64", 
         "-v", volume_cmd,
         "anc2001/cs1230_env:latest",
@@ -56,10 +56,10 @@ def main(args):
     if rc:
          print("Something went wrong building the project :(")
     else:
-        print("Successfully built project to image:", image)
+        print("Successfully built project to image:", args.image)
     
-    run_command(["docker", "commit", container, image])
-    run_command(["docker", "container", "rm", container])
+    run_command(["docker", "commit", args.container, args.image])
+    run_command(["docker", "container", "rm", args.container])
 
 if __name__ == '__main__':
     args = parseArguments()
