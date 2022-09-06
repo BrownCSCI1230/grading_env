@@ -51,6 +51,7 @@ def main(args):
         "anc2001/cs1230_env:latest",
         exec_cmd
     ]
+    print(' '.join(cmd))
     rc = run_command(cmd)
 
     if rc:
