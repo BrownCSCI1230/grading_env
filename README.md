@@ -18,19 +18,13 @@ python3 run.py --demo -e executable_name -i anc2001/cs1230_env:latest
 ```
 
 Executable name options 
- * `brush_min`
- * `brush_max`
- * `intersect_min`
- * `intersect_max`
- * `illuminate_min`
- * `illuminate_max`
- * `realtime1_min`
- * `realtime1_max`
- * `realtime2_min`
- * `realtime2_max`
+ * `projects_2d_min`
+ * `projects_2d_max`
+
+You may have noticed that the Ray and Realtime projects are not available. TA demos of those projects will be available when they come out! 
 
 ## Convenience Scripts
-I've added 2 convenience python scripts `build.py` and `run.py` that should abstract away all of the explicit docker commands below. If these scripts fail for some reason, try running the actual docker command printed out. 
+I've added 2 convenience python scripts `build.py` and `run.py` that should abstract away all of the explicit docker commands below. If these scripts fail for some reason, try running the actual docker command printed out. All Ray projects will require manual docker input, see below. 
 
 Example usage is shown below 
 ```

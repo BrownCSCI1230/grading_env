@@ -1,23 +1,21 @@
+from http.server import executable
 import subprocess
 from argparse import ArgumentParser
 import subprocess
 from sys import platform
-from typing import ParamSpecArgs
 
 def parseArguments():
     parser = ArgumentParser()
     parser.add_argument('--mode', type=str, default="graphical", 
-        help="either graphical or cli"),
-    parser.add_argument('--demo', action='store_true', 
-        help="Whether or not to run the TA demo")
+        help="either graphical or cli")
+    parser.add_argument('--demo', action="store_true",
+        help="")
     parser.add_argument('-e', '--executable', type=str, required=True, 
         help="name of executable (required)")
     parser.add_argument('-c', '--container', type=str, default="qt_app", 
         help="name of container (default qt_app)")
     parser.add_argument('-i', '--image', type=str, default="qt_project", 
         help="name of image (default qt_project)")
-    parser.add_argument('-r', '--args', type=str, default="", 
-        help="other args to command")
     args = parser.parse_args()
     return args
 
@@ -46,7 +44,8 @@ def main(args):
             exec_cmd[0] = "/bin/bash"
         
         if args.demo:
-            env_cmd = f"APP=/demos/{args.executable}"
+            executable = "projects_2d"
+            env_cmd = f"APP=/demos/{args.executable}/build/{executable}"
     elif platform == "win32":
         # Windows...
         if args.mode == 'graphical' or args.mode == 'demo':
@@ -72,7 +71,6 @@ def main(args):
             "--name", args.container,
             "--env", env_cmd,
             "-p", "6080:6080",
-            args.args,
             args.image,
             exec_cmd[0], exec_cmd[1], exec_cmd[2]
         ]
