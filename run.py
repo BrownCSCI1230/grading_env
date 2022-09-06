@@ -7,7 +7,9 @@ from typing import ParamSpecArgs
 def parseArguments():
     parser = ArgumentParser()
     parser.add_argument('--mode', type=str, default="graphical", 
-        help="either graphical or cli")
+        help="either graphical or cli"),
+    parser.add_argument('--demo', action='store_true', 
+        help="Whether or not to run the TA demo")
     parser.add_argument('-e', '--executable', type=str, required=True, 
         help="name of executable (required)")
     parser.add_argument('-c', '--container', type=str, default="qt_app", 
@@ -30,13 +32,6 @@ def run_command(cmd):
     rc = process.poll()
     return rc
 
-def run_command_cli(cmd):
-    process = subprocess.Popen(
-        cmd, 
-        stdout=subprocess.PIPE, 
-        stding=subprocess.PIPE,
-        universal_newlines=True)
-
 def main(args):
     exec_cmd = ["", "", ""]
     env_cmd = ""
@@ -49,21 +44,27 @@ def main(args):
             env_cmd = f"APP=/tmp/build/{args.executable}"
         else:
             exec_cmd[0] = "/bin/bash"
+        
+        if args.demo:
+            env_cmd = f"APP=/demos/{args.executable}"
     elif platform == "win32":
         # Windows...
-        if args.mode == 'graphical':
+        if args.mode == 'graphical' or args.mode == 'demo':
             exec_cmd[0] = "//usr//bin//supervisord"
             exec_cmd[1] = "-c"
             exec_cmd[2] = "//etc//supervisor//supervisord.conf"
             env_cmd = f"APP=//tmp//build//{args.executable}"
         else:
             exec_cmd[0] = "//bin//bash"
+        
+        if args.demo:
+            env_cmd = f"APP=//demos//{args.executable}"
 
     print("Cleaning: it's ok if Docker tries to stop and remove a container that doesn't exist!")
     run_command(["docker", "stop", args.container])
     run_command(["docker", "container", "rm", args.container])
     
-    if args.mode == 'graphical':
+    if args.mode == 'graphical' or args.mode == 'demo':
         cmd = [
             "docker", "run",
             "--platform=linux/amd64",

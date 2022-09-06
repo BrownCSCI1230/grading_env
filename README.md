@@ -9,17 +9,39 @@ Get docker [here](https://docs.docker.com/get-docker/)
 
 Pull the unified class grading environment with `docker pull anc2001/cs1230_env:latest`
 
-## Convenience Scripts
-I've added 2 convenience python scripts `build.py` and `run.py` that should abstract away all of the explicit docker commands below. 
+If you want to use the convenience scripts please also install [python](https://www.python.org/downloads/)! 
 
-Example usage is
+## Running TA demos 
+Within the docker image are TA demos. These demos are runnable through the `run.py` script. Example usage is shown below where `executable_name` is name of the project you want to show where a min suffix is a minimum working solution and a max suffix is an implementation with multiple extra credit features implemented. 
 ```
+python3 run.py --demo -e executable_name -i anc2001/cs1230_env:latest
+```
+
+Executable name options 
+ * `brush_min`
+ * `brush_max`
+ * `intersect_min`
+ * `intersect_max`
+ * `illuminate_min`
+ * `illuminate_max`
+ * `realtime1_min`
+ * `realtime1_max`
+ * `realtime2_min`
+ * `realtime2_max`
+
+## Convenience Scripts
+I've added 2 convenience python scripts `build.py` and `run.py` that should abstract away all of the explicit docker commands below. If these scripts fail for some reason, try running the actual docker command printed out. 
+
+Example usage is shown below 
+```
+# Path on windows should be specified with //
 python3 build.py -s /path/to/src
 ```
 
 and
 
 ```
+# 
 python3 run.py -e executable_name
 ```
 
@@ -202,6 +224,8 @@ Build the image with `docker build --platform=linux/amd64 -t username/image_name
 
 Please also note that for all executables at runtime the working directory is `/home/user/work`. Put any necessary files in this directory. 
 
+Some commands (like the last one that installs gcc 10) does not work. It will require you to run an interactive terminal session and then commit it to an image. The TA demos are manually installed in this manner into `/demos`. 
+
 ### Gradescope
 The specifications for creating a custom Docker image for Gradescope can be found [here](https://gradescope-autograders.readthedocs.io/en/latest/manual_docker/). 
 
@@ -220,3 +244,8 @@ The `get_qt.sh` script comes from [here](https://github.com/state-of-the-art/qt6
 The script relies on [aqt](https://github.com/miurahr/aqtinstall) which is a codebase for installing Qt headlessly. Unfortunately it is unofficial and not associated with the Qt company. 
 
 The Dockerfile copies the script and installs Qt to `/opt/Qt`
+
+### Image scripts notes
+`build_project.sh` copies the source code into the `/home/user/work` folder because that is the default working directory when an executable is run. Relative filepaths such as paths to fragment/vertex shaders and config files for ray need to be in the folder at runtime. 
+
+`run_autograder` lines 10-17 is a proxy for a try catch block in shell. My recommendation is to not write shell scripts and just use python scripts in the future.

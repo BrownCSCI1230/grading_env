@@ -98,7 +98,7 @@ RUN chmod +x /autograder/run_autograder
 COPY image_scripts/build_project.sh /opt/
 RUN chmod +x /opt/build_project.sh
 
-# Install gcc 11 and replace it 
+# Install gcc 10, to my knowledge this does not work, see README for workaround I used 
 RUN sudo apt update -y && sudo apt upgrade -y \
   sudo install -y gcc-10 g++-10 cpp-10 \
   sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-10 --slave /usr/bin/gcov gcov /usr/bin/gcov-10
