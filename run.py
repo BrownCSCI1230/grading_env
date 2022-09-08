@@ -1,4 +1,3 @@
-from http.server import executable
 import subprocess
 from argparse import ArgumentParser
 import subprocess
@@ -9,7 +8,7 @@ def parseArguments():
     parser.add_argument('--mode', type=str, default="graphical", 
         help="either graphical or cli")
     parser.add_argument('--demo', action="store_true",
-        help="")
+        help="Flag to specify running the TA demo")
     parser.add_argument('-e', '--executable', type=str, required=True, 
         help="name of executable (required)")
     parser.add_argument('-c', '--container', type=str, default="qt_app", 
@@ -63,7 +62,7 @@ def main(args):
     run_command(["docker", "stop", args.container])
     run_command(["docker", "container", "rm", args.container])
     
-    if args.mode == 'graphical' or args.mode == 'demo':
+    if args.mode == 'graphical':
         cmd = [
             "docker", "run",
             "--platform=linux/amd64",

@@ -12,7 +12,7 @@ Pull the unified class grading environment with `docker pull anc2001/cs1230_env:
 If you want to use the convenience scripts please also install [python](https://www.python.org/downloads/)! 
 
 ## Running TA demos 
-Within the docker image are TA demos. These demos are runnable through the `run.py` script. Example usage is shown below where `executable_name` is name of the project you want to show where a min suffix is a minimum working solution and a max suffix is an implementation with multiple extra credit features implemented. 
+Within the docker image are TA demos for each of the projects. These demos are runnable through the `run.py` script. Example usage is shown below where `executable_name` is name of the project you want to show. If the name has a `min` suffix, it will run a minimum working solution, and a `max` suffix will run an implementation with extra credit features implemented. 
 ```
 python3 run.py --demo -e executable_name -i anc2001/cs1230_env:latest
 ```
@@ -21,10 +21,10 @@ Executable name options
  * `projects_2d_min`
  * `projects_2d_max`
 
-You may have noticed that the Ray and Realtime projects are not available. TA demos of those projects will be available when they come out! 
+You may have noticed that the Ray and Realtime project demos are not available. TA demos of those projects will be available when they come out! 
 
 ## Convenience Scripts
-I've added 2 convenience python scripts `build.py` and `run.py` that should abstract away all of the explicit docker commands below. If these scripts fail for some reason, try running the actual docker command printed out. All Ray projects will require manual docker input, see below. 
+Included are two convenience python scripts `build.py` and `run.py` that should abstract away all of the explicit docker commands below. If these scripts fail for some reason, try running the actual docker command printed out. All Ray projects will require manual docker input, see below. 
 
 Example usage is shown below 
 ```
