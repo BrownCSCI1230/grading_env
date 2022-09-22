@@ -83,7 +83,7 @@ ENV ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install \
 build-essential libgl1-mesa-dev \
 libglib2.0-0 libglu1-mesa-dev libglu1-mesa libxi-dev libxkbcommon-dev \
-libxkbcommon-x11-dev libxkbfile-dev dbus
+libxkbcommon-x11-dev libxkbfile-dev dbus libbsd-dev
 
 COPY image_scripts/get_qt.sh /tmp/
 RUN chmod +x /tmp/*

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+export LDFLAGS="-Wl,--copy-dt-needed-entries"
 
 rm -rf /tmp/build
 mkdir -p /tmp/build
